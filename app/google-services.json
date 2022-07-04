@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "701717114583",
+    "project_id": "businesscatalog-e98ab",
+    "storage_bucket": "businesscatalog-e98ab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701717114583:android:e2a00210b1a02b7ce44a92",
+        "android_client_info": {
+          "package_name": "com.a1tech.businesscatalog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "701717114583-nni1hkusrohacerabm6dhut5662mj2jn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3SPLxoI2qE1Ixwzz-pAGxpbHRVGc4RKk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "701717114583-nni1hkusrohacerabm6dhut5662mj2jn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
