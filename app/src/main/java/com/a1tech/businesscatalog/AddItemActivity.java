@@ -33,9 +33,9 @@ public class AddItemActivity extends AppCompatActivity {
 
     private final int PICK_IMAGE_REQUEST = 22;
     private final String TAG = "AddItemActivity";
-    private ImageView ivBack, ivDebterPhoto;
+    private ImageView ivDebterPhoto;
     private EditText etDebterName, etDebterPhone;
-    private TextView actionBarText, tvItemPhoto;
+    private TextView tvItemPhoto;
     private Button btnDebtorSave;
     private Uri filePath;
     private FirebaseStorage storage;
@@ -52,24 +52,16 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     private void init() {
-        ivBack = findViewById(R.id.iv_back);
         ivDebterPhoto = findViewById(R.id.iv_debtor_photo);
         tvItemPhoto = findViewById(R.id.tv_debter_photo);
         etDebterName = findViewById(R.id.et_debter_name);
         etDebterPhone = findViewById(R.id.et_debter_phone);
         btnDebtorSave = findViewById(R.id.btn_debtor_save);
-        actionBarText = findViewById(R.id.action_bar_txt);
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
     }
 
     private void setOnClicks() {
-        ivBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
         tvItemPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,7 +86,7 @@ public class AddItemActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Image from here..."), PICK_IMAGE_REQUEST);
     }
 
-    private void setDataToServer(){
+    private void setDataToServer() {
 
     }
 
