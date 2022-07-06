@@ -54,7 +54,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.MyViewHolder
         String formatPrice = decimalFormat.format(Double.valueOf(Integer.parseInt(item.getItemPrice())));
 
         holder.drugName.setText(item.getItemName());
-        holder.drugPrice.setText("от " + formatPrice + " сум");
+        holder.drugPrice.setText(formatPrice + " сум");
         Glide.with(inflater.getContext()).load(item.getItemImg()).into(holder.drugImage);
 
     }

@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BusinessCatalog"
         tools:targetApi="31">
+        <activity android:name=".AddItemActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
