@@ -5,13 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
-    tools:context=".AddItemActivity"
+    tools:context=".Activity.AddItemActivity"
     tools:ignore="ExtraText">
 
     // add debtor
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_add_debtor"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:visibility="visible"
@@ -23,7 +22,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/cvPhoto"
             android:layout_width="match_parent"
-            android:layout_height="130dp"
+            android:layout_height="250dp"
             android:layout_margin="20dp"
             app:cardCornerRadius="5dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -34,14 +33,14 @@
                 android:id="@+id/iv_debtor_photo_temp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingStart="40dp"
-                android:paddingTop="20dp"
-                android:paddingEnd="40dp"
-                android:paddingBottom="50dp"
+                android:paddingStart="60dp"
+                android:paddingTop="40dp"
+                android:paddingEnd="60dp"
+                android:paddingBottom="70dp"
                 android:src="@drawable/ic_outline_image_24" />
 
             <TextView
-                android:id="@+id/tv_debter_photo"
+                android:id="@+id/tv_item_photo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="bottom|center"
@@ -55,7 +54,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/iv_debtor_photo"
+                android:id="@+id/iv_item_photo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop" />
@@ -73,11 +72,38 @@
             app:layout_constraintTop_toBottomOf="@+id/cvPhoto">
 
             <EditText
-                android:id="@+id/et_debter_name"
+                android:id="@+id/et_item_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:hint="Название товара"
+                android:padding="20dp"
+                android:textColor="@color/etColor"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            app:cardCornerRadius="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView3">
+
+            <EditText
+                android:id="@+id/et_item_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hint="Количество"
+                android:inputType="number"
                 android:padding="20dp"
                 android:textColor="@color/etColor"
                 android:textSize="14sp"
@@ -95,14 +121,15 @@
             app:cardCornerRadius="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardView3">
+            app:layout_constraintTop_toBottomOf="@+id/cardView">
 
             <EditText
-                android:id="@+id/et_debter_phone"
+                android:id="@+id/et_item_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:hint="Количество"
+                android:hint="Цена"
+                android:inputType="number"
                 android:padding="20dp"
                 android:textColor="@color/etColor"
                 android:textSize="14sp"
@@ -113,17 +140,17 @@
 
         </androidx.cardview.widget.CardView>
 
-        <Button
-            android:id="@+id/btn_debtor_save"
+        <androidx.constraintlayout.utils.widget.MotionButton
+            android:id="@+id/btn_item_save"
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:layout_margin="20dp"
             android:backgroundTint="@color/appColor"
             android:text="СОХРАНИТЬ"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

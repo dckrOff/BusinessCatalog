@@ -1,4 +1,4 @@
-package com.a1tech.businesscatalog;
+package com.a1tech.businesscatalog.Model;
 
 public class Item {
 

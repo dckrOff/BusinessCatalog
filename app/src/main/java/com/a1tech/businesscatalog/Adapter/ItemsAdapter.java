@@ -1,4 +1,4 @@
-package com.a1tech.businesscatalog;
+package com.a1tech.businesscatalog.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.a1tech.businesscatalog.Model.Item;
+import com.a1tech.businesscatalog.R;
 import com.bumptech.glide.Glide;
 
 import java.text.DecimalFormat;

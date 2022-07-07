@@ -1,4 +1,4 @@
-package com.a1tech.businesscatalog;
+package com.a1tech.businesscatalog.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,16 +7,16 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
+import com.a1tech.businesscatalog.Adapter.ItemsAdapter;
+import com.a1tech.businesscatalog.Model.Item;
+import com.a1tech.businesscatalog.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
@@ -114,7 +114,8 @@ public class MainActivity extends AppCompatActivity {
         if (filteredlist.isEmpty()) {
             // if no item is added in filtered list we are
             // displaying a toast message as no data found.
-            Toast.makeText(this, "No Data Found..", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "No Data Found..", Toast.LENGTH_SHORT).show();
+            itemsAdapter.filterList(filteredlist);
         } else {
             // at last we are passing that filtered
             // list to our adapter class.
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
 //                    Log.e(TAG, "1) " + childDataSnapshot.getKey()); //displays the key for the node
 //                    Log.e(TAG, "2) " + childDataSnapshot.child("img").getValue());   //gives the value for given keyname
-                    itemList.add(new Item(childDataSnapshot.child("name").getValue().toString(), childDataSnapshot.child("price").getValue().toString(), childDataSnapshot.child("img").getValue().toString(), childDataSnapshot.child("amount").getValue().toString()));
+                    itemList.add(new Item(childDataSnapshot.child("itemName").getValue().toString(), childDataSnapshot.child("itemPrice").getValue().toString(), childDataSnapshot.child("itemImg").getValue().toString(), childDataSnapshot.child("itemAmount").getValue().toString()));
                 }
                 setAdapter();
                 Log.e(TAG, "list size=> " + itemList.size());
@@ -147,5 +148,11 @@ public class MainActivity extends AppCompatActivity {
         rvMain.setLayoutManager(new GridLayoutManager(this, 2));
         itemsAdapter = new ItemsAdapter(getApplicationContext(), itemList);
         rvMain.setAdapter(itemsAdapter); // set the Adapter to RecyclerView
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getList();
     }
 }

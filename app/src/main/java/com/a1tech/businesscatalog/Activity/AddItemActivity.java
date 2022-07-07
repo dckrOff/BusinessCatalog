@@ -1,4 +1,4 @@
-package com.a1tech.businesscatalog;
+package com.a1tech.businesscatalog.Activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,31 +15,43 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.utils.widget.MotionButton;
 
+import com.a1tech.businesscatalog.Model.Item;
+import com.a1tech.businesscatalog.R;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class AddItemActivity extends AppCompatActivity {
 
     private final int PICK_IMAGE_REQUEST = 22;
     private final String TAG = "AddItemActivity";
-    private ImageView ivDebterPhoto;
-    private EditText etDebterName, etDebterPhone;
+    private ImageView ivItemPhoto;
+    private EditText etItemName, etItemAmount, etItemPrice;
     private TextView tvItemPhoto;
-    private Button btnDebtorSave;
+    private MotionButton btnItemSave;
     private Uri filePath;
     private FirebaseStorage storage;
     private StorageReference storageRef;
     private String urlImage;
+    private ArrayList<Item> mList = new ArrayList();
+    private DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +59,19 @@ public class AddItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_debt);
 
         init();
+        getList();
         setOnClicks();
     }
 
     private void init() {
-        ivDebterPhoto = findViewById(R.id.iv_debtor_photo);
-        tvItemPhoto = findViewById(R.id.tv_debter_photo);
-        etDebterName = findViewById(R.id.et_debter_name);
-        etDebterPhone = findViewById(R.id.et_debter_phone);
-        btnDebtorSave = findViewById(R.id.btn_debtor_save);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("items_list");
+        ivItemPhoto = findViewById(R.id.iv_item_photo);
+        tvItemPhoto = findViewById(R.id.tv_item_photo);
+        etItemName = findViewById(R.id.et_item_name);
+        etItemAmount = findViewById(R.id.et_item_amount);
+        btnItemSave = findViewById(R.id.btn_item_save);
+        etItemPrice = findViewById(R.id.et_item_price);
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
     }
@@ -69,10 +84,35 @@ public class AddItemActivity extends AppCompatActivity {
                 selectImage();
             }
         });
-        btnDebtorSave.setOnClickListener(new View.OnClickListener() {
+        btnItemSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+//                onBackPressed();
+                if (!etItemName.getText().toString().isEmpty() && !etItemAmount.getText().toString().isEmpty() && !etItemPrice.getText().toString().isEmpty()) {
+                    uploadImage();
+                } else {
+                    Toast.makeText(AddItemActivity.this, "Iltimos maydonlarni to'ldiring", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void getList() {
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mList.clear();
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+//                    Log.e(TAG, "1) " + childDataSnapshot.getKey()); //displays the key for the node
+//                    Log.e(TAG, "2) " + childDataSnapshot.child("img").getValue());   //gives the value for given keyname
+                    mList.add(new Item(childDataSnapshot.child("itemName").getValue().toString(), childDataSnapshot.child("itemPrice").getValue().toString(), childDataSnapshot.child("itemImg").getValue().toString(), childDataSnapshot.child("itemAmount").getValue().toString()));
+                }
+                Log.e(TAG, "list size-> " + mList.size());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "Failed to read value.", error.toException());
             }
         });
     }
@@ -86,9 +126,18 @@ public class AddItemActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Image from here..."), PICK_IMAGE_REQUEST);
     }
 
-    private void setDataToServer() {
-
+    private void loadDataToServer() {
+        myRef.setValue(mList).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(AddItemActivity.this, "Data is added to server successfully", Toast.LENGTH_SHORT).show();
+                    onBackPressed();
+                }
+            }
+        });
     }
+
 
     // UploadImage method
     private void uploadImage() {
@@ -109,8 +158,6 @@ public class AddItemActivity extends AppCompatActivity {
                             // Image uploaded successfully
                             // Dismiss dialog
                             progressDialog.dismiss();
-                            Toast.makeText(AddItemActivity.this, "Image Uploaded!!", Toast.LENGTH_SHORT).show();
-
                             taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
@@ -120,9 +167,12 @@ public class AddItemActivity extends AppCompatActivity {
                                             .load(urlImage)
                                             .centerCrop()
 //                                            .placeholder(R.drawable.i) // if fail to load image
-                                            .into(ivDebterPhoto);
+                                            .into(ivItemPhoto);
 
                                     Log.e("URL image-> ", uri.toString());
+
+                                    mList.add(new Item(etItemName.getText().toString(), etItemPrice.getText().toString(), uri.toString(), etItemAmount.getText().toString()));
+                                    loadDataToServer();
                                 }
                             });
                         }
@@ -154,12 +204,10 @@ public class AddItemActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             // Get the Uri of data
             filePath = data.getData();
-
-            uploadImage();
             try {
                 // Setting image on image view using Bitmap
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                ivDebterPhoto.setImageBitmap(bitmap);
+                ivItemPhoto.setImageBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }
